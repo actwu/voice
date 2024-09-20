@@ -1,0 +1,51 @@
+<neu>
+<script src="https://purpos.web.app/ui/sen.js"></script>
+<script setup>
+setSEO(); setViewport(); ui();
+</script>
+
+<body>
+<cont none>
+<p>Say a command (like 'open YouTube'):</p>
+<p id="output"></p>
+<a onmousedown="startVoiceRecognition()">Start Voice Command</a>
+</cont>
+
+<script>
+let commands = {
+  'youtube': 'vnd.youtube:',
+  'facebook': 'fb://',
+  'spotify': 'spotify:',
+  'twitter': 'twitter://',
+  'instagram': 'instagram://'
+};
+
+function startVoiceRecognition() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = 'en-US';
+  recognition.start();
+
+  recognition.onresult = function(event) {
+    const voiceText = event.results[0][0].transcript;
+    document.getElementById('output').innerText = voiceText;
+    processCommand(voiceText);
+  };
+
+  recognition.onerror = function(event) {
+    console.log(event.error);
+  };
+}
+
+function processCommand(text) {
+  const words = text.toLowerCase().split(' ');
+  for (let cmd in commands) {
+    if (words.includes(cmd)) {
+      window.open(commands[cmd]);
+      break;
+    }
+  }
+}
+</script>
+
+</body>
+</neu>
